@@ -38,11 +38,7 @@ const getApiSearch = async () => {
       try{
 
         const url = 'https://rickandmortyapi.com/api/character?name=' + searchCharacter.value
-     
-      
-
         const res = await fetch(url)
-      
         const allres = await res.json()
         // data.value = allres.results
         if(!res.ok){
@@ -65,6 +61,7 @@ const getApiSearch = async () => {
   
       }catch (err){
         error.value = err.message
+
       }
 
 
@@ -77,8 +74,7 @@ const nextPageClick = () => {
   }
 
   data.value = []
-
-  
+  searchCharacter.value = ''
   btnDisable.value = ''
   nextpage.value ++
   pages.value = `page=${nextpage.value}`
@@ -90,7 +86,7 @@ const prevPageClick = () => {
     return
   }
   data.value = []
-
+  searchCharacter.value = ''
   btnDisable.value = ''
   nextpage.value -= 1
   pages.value = `page=${nextpage.value}`
@@ -116,10 +112,21 @@ onMounted(() => {
 
 <template>
   <main class="home-container">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+        <path fill="rgb(38, 41, 44)" fill-opacity="1" d="M0,288L13.3,261.3C26.7,235,53,181,80,149.3C106.7,117,133,107,160,117.3C186.7,128,213,160,240,170.7C266.7,181,293,171,320,144C346.7,117,373,75,400,58.7C426.7,43,453,53,480,58.7C506.7,64,533,64,560,53.3C586.7,43,613,21,640,32C666.7,43,693,85,720,112C746.7,139,773,149,800,138.7C826.7,128,853,96,880,74.7C906.7,53,933,43,960,53.3C986.7,64,1013,96,1040,138.7C1066.7,181,1093,235,1120,229.3C1146.7,224,1173,160,1200,165.3C1226.7,171,1253,245,1280,229.3C1306.7,213,1333,107,1360,90.7C1386.7,75,1413,149,1427,186.7L1440,224L1440,0L1426.7,0C1413.3,0,1387,0,1360,0C1333.3,0,1307,0,1280,0C1253.3,0,1227,0,1200,0C1173.3,0,1147,0,1120,0C1093.3,0,1067,0,1040,0C1013.3,0,987,0,960,0C933.3,0,907,0,880,0C853.3,0,827,0,800,0C773.3,0,747,0,720,0C693.3,0,667,0,640,0C613.3,0,587,0,560,0C533.3,0,507,0,480,0C453.3,0,427,0,400,0C373.3,0,347,0,320,0C293.3,0,267,0,240,0C213.3,0,187,0,160,0C133.3,0,107,0,80,0C53.3,0,27,0,13,0L0,0Z"></path>
+      </svg>
     <header>
-      <img src="../assets/logo.png" alt="">
-      <h3>API</h3>
+      <div class="header-content">
+        <div class="logoname">
+          <img src="../assets/logo.png" alt="">
+          <h3>API</h3>
+
+        </div>
+        <RouterLink :to="{name: 'home'}">Home</RouterLink>
+
+      </div>
     </header>
+
     <div class="container">
 
       <div class="pages">
@@ -140,6 +147,7 @@ onMounted(() => {
         <Character v-if="data.length" :data="data" />
       </div>
     </div>
+
   </main>
 </template>
 
@@ -150,24 +158,74 @@ onMounted(() => {
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 1;
+    position: relative;
+    margin-bottom: 40px;
+  }
+  header .header-content{
+    max-width: 1100px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+  header .header-content a{
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translate(0, -50%);
+    text-decoration: none;
+    outline: none;
+    font-size: 20px;
+    color: #fff;
+    padding-right: 20px;
+    transition: 0.4s ease;
+  }
+  .logoname{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  header .header-content a:hover{
+    color: rgb(174, 255, 157);
   }
   header img{
     height: auto;
     width:340px;
     margin-right: 14px;
+    z-index: 11;
+
+  }
+   svg{
+    position: absolute;
+    left: 0;
+    top: 150px;
+    height: auto;
+    width: 100%;
+  }
+ svg path{
+  
+    width: 100%;
   }
   header h3 {
     color: #fff;
+    z-index: 99;
   }
   .home-container{
+    z-index: 99;
     background-image: url('../assets/wallpaperflare.com_wallpaper.jpg');
+    /* background: #333333; */
     min-height: 100vh;
     background-position:100% 100%;
     background-attachment: fixed;
     background-size: cover ;
   }
   .container{
+    position: relative;
     padding: 0 20px;
+    z-index: 999;
   }
   .char-container{
     padding:40px 0;
@@ -185,6 +243,7 @@ onMounted(() => {
     justify-content: center;
     align-items: center;
     gap: 20px;
+    z-index: 999;
   }
 
   input{
@@ -218,7 +277,7 @@ onMounted(() => {
     margin: 0 auto;
     display: flex;
 
-    gap: 10px;
+    gap: 10px;  
   }
   .pages button{
     background: rgb(183, 253, 183);
@@ -298,18 +357,32 @@ onMounted(() => {
       cursor: pointer;
       color: rgb(56, 56, 56);
     }
+
+    header .header-content{
+    max-width: 1100px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    position: relative;
   }
-  @media screen and (max-width: 768px) {
-    .char{
-        display: grid;
-        grid-auto-flow: column;
-        grid-template-rows:1fr auto;
-        grid-template-columns: 1fr;
-        position: relative;
-        max-width: 296px;
-        width: 100%;
+    header .header-content a{
+      position: unset;
+      right: 0;
+      top: 50%;
+      transform: translate(0,0);
+      text-decoration: none;
+      outline: none;
+      font-size: 20px;
+      color: #fff;
+      padding-right: 20px;
+      transition: 0.4s ease;
     }
-}
+  }
+
 @media screen and (max-width: 568px) {
   .pages{
     display: grid;

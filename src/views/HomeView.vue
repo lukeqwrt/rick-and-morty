@@ -57,7 +57,6 @@
 
   @media screen and (max-width: 768px) {
   .landing-page{
-    background-position:center;
   }
   .landing-page .landing-wrapper {
     width: 100%;

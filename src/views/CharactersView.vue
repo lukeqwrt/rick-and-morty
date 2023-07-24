@@ -217,10 +217,11 @@ onMounted(() => {
     z-index: 99;
     background-image: url('../assets/wallpaperflare.com_wallpaper.jpg');
     /* background: #333333; */
-    min-height: 100vh;
+
     background-position:100% 100%;
     background-attachment: fixed;
     background-size: cover ;
+    min-height: 100vh;
   }
   .container{
     position: relative;
@@ -247,14 +248,13 @@ onMounted(() => {
   }
 
   input{
-    margin-left: auto;
     height: 40px;
     border: none;
-    /* padding: 0 20px; */
-    width: 100%;
+    padding: 0 20px;
+    /* width: 100%; */
     max-width: 500px;
     border-radius: 6px;
-
+    margin-left: auto;
     outline: none;
     font-family: 'Poppins', sans-serif;
     font-size: 19px;
@@ -276,7 +276,6 @@ onMounted(() => {
     max-width: 1100px;
     margin: 0 auto;
     display: flex;
-
     gap: 10px;  
   }
   .pages button{
@@ -381,6 +380,8 @@ onMounted(() => {
       padding-right: 20px;
       transition: 0.4s ease;
     }
+
+
   }
 
 @media screen and (max-width: 568px) {
@@ -391,6 +392,9 @@ onMounted(() => {
     justify-content: center;
     width: 100%;
     flex-direction: column;
+  }
+  input{
+      margin-left: unset;
   }
   .pages input{
     grid-column: 1/3;

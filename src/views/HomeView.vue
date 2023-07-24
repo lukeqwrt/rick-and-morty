@@ -7,7 +7,7 @@
   <main class="landing-page">
       <div class="landing-wrapper">
         <img src="../assets/2294143541-RAMMobileHero.webp" alt="">
-        <RouterLink :to="{ name: 'characters'}">
+        <RouterLink :to="{ name: 'choose'}">
           <button>View Characters</button>
         </RouterLink>
       </div>

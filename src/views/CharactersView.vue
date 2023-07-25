@@ -9,6 +9,9 @@ const btnDisable = ref('')
 const pages = ref('')
 const searchCharacter = ref('')
 const error = ref('')
+const status = ref('')
+const isDisable = ref(true)
+
 const getApi = async () => {
         loading.value = true
         const url = 'https://rickandmortyapi.com/api/character?' + pages.value 
@@ -37,15 +40,16 @@ const getApiSearch = async () => {
       }
       try{
 
-        const url = 'https://rickandmortyapi.com/api/character?name=' + searchCharacter.value
+        const url = `https://rickandmortyapi.com/api/character?name=${searchCharacter.value}&${status.value}` 
         const res = await fetch(url)
         const allres = await res.json()
         // data.value = allres.results
+        console.log(url)
         if(!res.ok){
           loading.value = false
           throw Error('There is nothing here')
         }
-   
+        
         data.value = allres.results.map((character) => ({
           id: character.id,
           name: character.name,
@@ -100,8 +104,10 @@ onMounted(() => {
   watchEffect(() => {
       if(searchCharacter.value.trim() === ''){
         error.value = ''
+        isDisable.value = true
         getApi()
       }else{
+        isDisable.value = false
         getApiSearch()
  
     }
@@ -130,11 +136,33 @@ onMounted(() => {
     <div class="container">
 
       <div class="pages">
+        <div class="status_char">
+          <label>
+            <input type="radio" value="status=alive" v-model="status" :disabled="isDisable">
+            <div class="stats">
+              Alive
+            </div>
+          </label>
+          <label>
+            <input type="radio" value="status=dead" v-model="status" :disabled="isDisable">
+            <div class="stats">
+              Dead
+            </div>
+          </label>
+          <label>
+            <input type="radio" value="status=unknown" v-model="status" :disabled="isDisable">
+            <div class="stats">
+              Unknown
+            </div>
+          </label>
+        </div>
+
         <input type="text" placeholder="Search Character" v-model="searchCharacter">
-        
         <button @click="prevPageClick" :class=" nextpage === 1 ? 'disable' : 'active' " >Prev</button>
         <button @click="nextPageClick" :class=" nextpage === 42 ? 'disable' : 'active' " >Next</button>
-      </div>
+       </div>
+
+
       <div class="char-container">
         <div class="error" v-if="error">
           <img src="../assets/error.png" alt="error">
@@ -261,9 +289,7 @@ onMounted(() => {
     transition: 0.3s ease;
       
   }
-  input::placeholder{
-    padding: 0 20px;
-  }
+
   input:focus{
     outline: rgb(189, 240, 189) solid 1px;
     box-shadow: 0px 0px 10 5px rgba(179,255,155,0.75);
@@ -276,7 +302,42 @@ onMounted(() => {
     max-width: 1100px;
     margin: 0 auto;
     display: flex;
+    justify-content: space-between;
+    align-items: center;
     gap: 10px;  
+  }
+  .pages .status_char{
+    display: flex;
+    gap: 10px;
+  }
+  .pages .status_char input{
+    display: none;
+  }
+  .pages .status_char label .stats{
+    color: #fff;
+    border: 2px solid rgb(134, 134, 134);
+    background: rgb(77, 77, 77);
+
+    
+    border-radius: 6px;
+    padding: 8px 30px;
+    cursor: pointer;
+    transition: 0.3s ease;
+  }
+  .pages .status_char label .stats:hover{
+    border: 2px solid rgb(0, 255, 136);
+  }
+  
+  .pages .status_char label input[type="radio"]:checked + .stats{
+    background: rgb(183, 253, 183);
+    color: #000;
+    border: 2px solid rgb(0, 255, 136);
+  }
+  .pages .status_char label input[type="radio"]:disabled + .stats{
+    border: 2px solid #999999;
+    background-color: #cccccc;
+    color: #666666;
+    pointer-events: none;
   }
   .pages button{
     background: rgb(183, 253, 183);
@@ -325,6 +386,31 @@ onMounted(() => {
   .error h2{
     margin-top: 30px;
     color: rgb(142, 227, 142);
+  }
+  @media screen and (max-width: 941px) {
+    .pages{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr 1fr 1fr;
+    }
+    .pages input {
+      margin-left: unset;
+      max-width: unset;
+      grid-row: 1/2;
+      grid-column: 1/3;
+    }
+    .pages button:nth-child(3){
+      grid-column: 1/2;
+      grid-row: 2/3;
+    }
+    .pages button:nth-child(4){
+      grid-column: 2/3;
+      grid-row: 2/3;
+    }
+    .pages .status_char{
+      grid-row: 3/4;
+      grid-column: 1/3;
+    }
   }
   @media screen and (max-width: 768px) {
       .char-container{
@@ -381,33 +467,19 @@ onMounted(() => {
       transition: 0.4s ease;
     }
 
-
+ 
   }
-
-@media screen and (max-width: 568px) {
-  .pages{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    justify-content: center;
-    width: 100%;
-    flex-direction: column;
+  @media screen and (max-width: 500px) {
+    .pages .status_char{
+      display: grid;
+      grid-auto-flow: column;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      /* justify-content: space-around; */
+    }
+    .pages .status_char label .stats {
+      text-align: center;
+      padding: 5px 10px;
+    }
   }
-  input{
-      margin-left: unset;
-  }
-  .pages input{
-    grid-column: 1/3;
-    grid-row: 1/2;
-
-  }
-  .pages button:nth-child(2){
-    grid-column: 1/2;
-    grid-row:2/3;
-  }
-  .pages button:nth-child(3){
-    grid-column: 2/3;
-    grid-row:2/3;
-  }
-}
 </style>
